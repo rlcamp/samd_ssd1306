@@ -1,15 +1,11 @@
 #include "ssd1306.h"
 #include <stdio.h>
 
-//#include "samd.h"
-
 void setup(void) {
     oled_clear();
     oled_write_text("hello\n");
     oled_refresh();
 
-//    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-//    __DSB();
 }
 
 void loop(void) {
