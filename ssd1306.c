@@ -73,15 +73,15 @@ static void enable_pixel_in_buffer(uint8_t * restrict const pixel_buffer, const 
 
 uint16_t text_cursor_x, text_cursor_y;
 
-/* double buffer. calling oled_clear() swaps buffers, allowing the prior buffer to continue to be
+/* double buffer. calling screen_clear() swaps buffers, allowing the prior buffer to continue to be
  streamed to the display while the new buffer is cleared and then drawed upon. one should either
- call oled_clear OR loop on oled_is_still_writing() between oled_refresh() and successive calls
+ call screen_clear OR loop on screen_is_still_writing() between screen_refresh() and successive calls
  which modify the pixel buffer, ideally as late as possible in the latter case */
 static uint8_t blocks[2][SCREEN_WIDTH * SCREEN_HEIGHT / 8 + 1];
 static unsigned char ibuf = 0;
 static uint8_t * pixel_buffer = blocks[0] + 1;
 
-void oled_clear(void) {
+void screen_clear(void) {
     ibuf = !ibuf;
     pixel_buffer = blocks[ibuf] + 1;
     memset(pixel_buffer, 0, SCREEN_WIDTH * SCREEN_HEIGHT / 8);
@@ -89,15 +89,15 @@ void oled_clear(void) {
     text_cursor_x = 0;
 }
 
-void oled_refresh(void) {
+void screen_refresh(void) {
     ssd1306_update(pixel_buffer);
 }
 
-int oled_is_still_writing(void) {
+int screen_is_still_writing(void) {
     return i2c_is_still_writing();
 }
 
-void oled_set_pixel(const size_t x, const size_t y, const char on) {
+void screen_set_pixel(const size_t x, const size_t y, const char on) {
     enable_pixel_in_buffer(pixel_buffer, x, y, on);
 }
 
@@ -149,10 +149,10 @@ static void draw_character(uint16_t x, uint16_t y, unsigned char c) {
 
     for (size_t icol = 0; icol < FONT_WIDTH; icol++)
         for (size_t irow = 0; irow < FONT_HEIGHT; irow++)
-            oled_set_pixel(x + icol, y + irow, (font[c - 32][icol] >> irow) & 1);
+            screen_set_pixel(x + icol, y + irow, (font[c - 32][icol] >> irow) & 1);
 }
 
-void oled_write_text(const char * string) {
+void screen_write_text(const char * string) {
     for (const char * cursor = string; *cursor != '\0'; cursor++) {
         const unsigned char c = *cursor;
 
@@ -162,7 +162,7 @@ void oled_write_text(const char * string) {
         }
 
         while (text_cursor_y + FONT_PITCH_VERTICAL > SCREEN_HEIGHT) {
-//            while (oled_is_still_writing()) __WFI();
+            //            while (screen_is_still_writing()) __WFI();
 
             /* very horrible hack, only works because of a series of coincidences */
             memmove(pixel_buffer, pixel_buffer + SCREEN_WIDTH * FONT_PITCH_VERTICAL / 8, SCREEN_WIDTH * (SCREEN_HEIGHT - FONT_PITCH_VERTICAL) / 8);
