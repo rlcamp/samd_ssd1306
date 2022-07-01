@@ -8,7 +8,9 @@
 #include <string.h>
 
 /* change this to 64 for the 128x64 oled, which automatically changes the i2c address */
+#ifndef SCREEN_HEIGHT
 #define SCREEN_HEIGHT 32
+#endif
 #define SCREEN_WIDTH 128
 
 #define SSD1306_MEMORYMODE 0x20
