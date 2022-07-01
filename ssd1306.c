@@ -183,3 +183,5 @@ void screen_write_text(const char * string) {
         }
     }
 }
+
+char _screen_printf_buf[132];

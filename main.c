@@ -16,10 +16,9 @@ void loop(void) {
     }
 
     /* draw some text into the buffer, without having cleared it */
-    char buf[64];
     static unsigned long frame = 0;
-    sprintf(buf, "frame %lu\n", frame++);
-    screen_write_text(buf);
+    screen_printf("frame %lu\n", frame++);
 
+    /* initiate a redraw of the screen */
     screen_refresh();
 }

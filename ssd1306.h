@@ -20,6 +20,9 @@ void screen_write_text(const char * string);
 /* turn a single pixel on or off */
 void screen_set_pixel(const size_t x, const size_t y, const char on);
 
+extern char _screen_printf_buf[];
+#define screen_printf(...) do { sprintf(_screen_printf_buf, __VA_ARGS__); screen_write_text(_screen_printf_buf); } while (0)
+
 #ifdef __cplusplus
 }
 #endif
