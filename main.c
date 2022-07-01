@@ -2,10 +2,14 @@
 #include <stdio.h>
 
 void setup(void) {
+    /* blank the screen */
     screen_clear();
-    screen_write_text("hello\n");
-    screen_refresh();
 
+    /* draw into the buffer */
+    screen_write_text("hello\n");
+
+    /* initiate actual drawing of the buffer onto the screen */
+    screen_refresh();
 }
 
 void loop(void) {
