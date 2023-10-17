@@ -158,7 +158,7 @@ void screen_write_text(const char * string) {
     for (const char * cursor = string; *cursor != '\0'; cursor++) {
         const unsigned char c = *cursor;
 
-        if (text_cursor_x + FONT_PITCH_HORIZONTAL > SCREEN_WIDTH) {
+        if (text_cursor_x + FONT_PITCH_HORIZONTAL > SCREEN_WIDTH && '\n' != c && '\r' != c) {
             text_cursor_x = 0;
             text_cursor_y += FONT_PITCH_VERTICAL;
         }
