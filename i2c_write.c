@@ -133,8 +133,8 @@ void SERCOM_HANDLER(void) {
     /* otherwise just send the next byte */
     else SERCOM->I2CM.DATA.bit.DATA = *(data_being_sent++);
 
-    /* clear the interrupt flag. yes, you should raise an eyebrow about this, and gcc does too */
-    SERCOM->I2CM.INTFLAG.bit.MB = 1;
+    /* clear the interrupt flag. yes, you should raise an eyebrow about this */
+    SERCOM->I2CM.INTFLAG.reg = (SERCOM_I2CM_INTFLAG_Type) { .bit.MB = 1 }.reg;
     while (SERCOM->I2CM.INTFLAG.bit.MB);
 }
 
@@ -153,7 +153,7 @@ void i2c_write(uint8_t address, const void * data, size_t size) {
     data_stop = data_being_sent + size;
 
     /* enable can-send-next-byte interrupt */
-    SERCOM->I2CM.INTENSET.reg = SERCOM_I2CM_INTENSET_MB;
+    SERCOM->I2CM.INTENSET.reg = (SERCOM_I2CM_INTENSET_Type) { .bit.MB = 1 }.reg;
 
     /* set address, which kicks off the interrupt handler */
     SERCOM->I2CM.ADDR.bit.ADDR = address << 1;
